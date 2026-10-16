@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap");
+
+:root {
+  color-scheme: dark;
+  --ink: #f4f1eb;
+  --muted: #9c9a95;
+  --accent: #df5d3f;
+  --surface: #171717;
+  --edge: #2d2d2d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: #101010;
+  font-family: "Manrope", sans-serif;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 42%, #232323 0, #101010 62%);
+  content: "";
+}
+
+.portfolio {
+  display: flex;
+  flex-direction: column;
+  width: min(1280px, 100%);
+  min-height: 100vh;
+  margin: auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.25rem, 5vw, 5rem) 2rem;
+}
+
+.intro { display: flex; align-items: baseline; gap: 1.5rem; }
+.eyebrow, .hint, .page-count, .controls a {
+  font-family: "DM Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.eyebrow { margin: 0; color: var(--accent); }
+h1 { margin: 0; font-size: clamp(1.25rem, 2vw, 1.65rem); font-weight: 600; letter-spacing: -0.04em; }
+.hint { margin: 0 0 0 auto; color: var(--muted); }
+
+.reader {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 4vw, 3.5rem);
+  padding: clamp(2.5rem, 7vh, 5.5rem) 0;
+}
+
+.book-wrap {
+  width: min(79vw, 1000px, 104vh);
+  perspective: 2200px;
+}
+.book {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1224 / 792;
+  overflow: hidden;
+  box-shadow: 0 28px 70px rgb(0 0 0 / 45%), 0 0 0 1px rgb(255 255 255 / 7%);
+  transform-style: preserve-3d;
+}
+.page {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+  backface-visibility: hidden;
+  user-select: none;
+}
+.underneath { z-index: 0; }
+.current { z-index: 1; transform-origin: left center; }
+.current.turn-next { animation: turn-next 700ms cubic-bezier(.65, 0, .35, 1) forwards; }
+.current.turn-previous { transform-origin: right center; animation: turn-previous 700ms cubic-bezier(.65, 0, .35, 1) forwards; }
+@keyframes turn-next { from { transform: rotateY(0); } to { transform: rotateY(-180deg); } }
+@keyframes turn-previous { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+
+.nav-button {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  place-items: center;
+  border: 1px solid var(--edge);
+  border-radius: 50%;
+  color: var(--ink);
+  background: transparent;
+  font: 1.2rem "Manrope", sans-serif;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.nav-button:hover:not(:disabled), .nav-button:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.08);
+}
+.nav-button:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.controls { display: flex; align-items: center; justify-content: space-between; }
+.page-count { margin: 0; color: var(--muted); }
+.current-number { color: var(--ink); }
+.divider { display: inline-block; margin: 0 0.4rem; color: var(--accent); }
+.controls a { color: var(--ink); text-decoration: none; transition: color 180ms ease; }
+.controls a:hover, .controls a:focus-visible { color: var(--accent); }
+
+@media (max-width: 600px) {
+  .portfolio { padding-top: 1.5rem; }
+  .intro { display: block; }
+  .eyebrow { margin-bottom: 0.5rem; }
+  .hint { margin-top: 0.5rem; }
+  .reader { gap: 0.5rem; padding: 2rem 0 3rem; }
+  .book-wrap { width: calc(100vw - 6rem); }
+  .nav-button { width: 2.25rem; height: 2.25rem; flex-basis: 2.25rem; }
+  .controls a { font-size: 0.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .current.turn-next, .current.turn-previous { animation-duration: 1ms; }
+  .nav-button { transition: none; }
+}
